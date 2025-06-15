@@ -1,0 +1,8 @@
+secretsPaths:
+  gigachat:
+    cert: ../cert/cert.pem
+    key: ../cert/private.key
+  certChain: ../cert/cacrt
+
+token:
+  gigachat: 
