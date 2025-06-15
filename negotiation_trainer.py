@@ -336,6 +336,10 @@ def main():
         st.session_state.dialogue_ended = False
     if 'report_data' not in st.session_state:
         st.session_state.report_data = None
+    if 'message_key' not in st.session_state:
+        st.session_state.message_key = 0
+    if 'user_message' not in st.session_state:
+        st.session_state.user_message = ""
     
     # Боковая панель с информацией
     with st.sidebar:
@@ -358,6 +362,8 @@ def main():
             st.session_state.report_generator = None
             st.session_state.dialogue_ended = False
             st.session_state.report_data = None
+            st.session_state.message_key = 0
+            st.session_state.user_message = ""
             st.rerun()
     
     # Основная область
@@ -397,7 +403,15 @@ def main():
             
             # Поле ввода сообщения
             if not st.session_state.dialogue_ended:
-                user_message = st.text_area("💭 Ваше сообщение:", height=100, placeholder="Введите ваше сообщение клиенту...")
+                user_message = st.text_area(
+                    "💭 Ваше сообщение:", 
+                    value=st.session_state.user_message,
+                    height=100, 
+                    placeholder="Введите ваше сообщение клиенту...",
+                    key=f"message_input_{st.session_state.message_key}"
+                )
+                # Очищаем поле ввода
+                st.session_state.user_message = ""
                 
                 col_btn1, col_btn2 = st.columns([1, 1])
                 
@@ -429,6 +443,7 @@ def main():
                                         st.session_state.conversation_history
                                     )
                             
+                            st.session_state.message_key += 1
                             st.rerun()
                 
                 with col_btn2:
@@ -438,6 +453,7 @@ def main():
                             st.session_state.report_data = st.session_state.report_generator.generate_report(
                                 st.session_state.conversation_history
                             )
+                        st.session_state.message_key += 1
                         st.rerun()
             else:
                 st.success("✅ Диалог завершен! Сгенерируйте отчет для анализа результатов.")
